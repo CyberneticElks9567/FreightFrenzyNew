@@ -2,12 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @Autonomous(name = "Blue Freight Autonomous", group = "Linear OpMode")
 public class AutonomousFreightFrenzy_BlueFreight extends LinearOpMode {
+    /**
+     * Programmer:    Sean Pakros
+     * Date Created:  9/25/21
+     * Purpose: This is our main teleop for driver controlled in freight frenzy season
+     */
 
     OpMode opmode;
 

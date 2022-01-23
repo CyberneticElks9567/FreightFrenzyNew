@@ -10,6 +10,12 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class CannyFreightDetector extends OpenCvPipeline {
+    /**
+     * Programmer:    Sean Pakros
+     * Date Created:  1/20/22
+     * Purpose: Going to be a more advanced shipping element detection program
+     * that will draw bounding boxes around the elements instead of me drawing them manually.
+     */
     Telemetry telemetry;
     Mat mat = new Mat();
     public enum Location {

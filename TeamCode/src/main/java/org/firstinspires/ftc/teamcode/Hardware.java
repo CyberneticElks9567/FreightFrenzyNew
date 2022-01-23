@@ -25,13 +25,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 
 public class Hardware extends LinearOpMode
 {
-    public DcMotor motorFrontRight;
-    public DcMotor motorBackRight;
-    public DcMotor motorBackLeft;
-    public DcMotor motorFrontLeft;
-    public DcMotor motorCarousel;
-    public DcMotor motorArm;     //
-    public DcMotor motorWinch;   //
+    /**
+     * Programmer:    Aiden Smith (Sean Pakros after Aiden has left the team)
+     * Date Created:  Sometime in 2017?
+     * Purpose:       Contains all our hardware and functions, basically everything we need to run.
+     */
+    public DcMotor motorFrontRight;//In use
+    public DcMotor motorBackRight;//In use
+    public DcMotor motorBackLeft;//In use
+    public DcMotor motorFrontLeft;//In use
+    public DcMotor motorCarousel; //In use
+    public DcMotor motorArm;     //In use
+    public DcMotor motorWinch;   //In use
     public DcMotor motorLift;
     public DcMotor motorSpinner;
     public DcMotor motorSwivel;
@@ -48,7 +53,7 @@ public class Hardware extends LinearOpMode
     Servo servoFoundation1;
     Servo servoFoundation2;
     Servo servoSuction;
-    Servo servoIntake; //
+    Servo servoIntake; //In use
 
     CRServo servoSpin;
     CRServo servoSpin2;
@@ -62,7 +67,7 @@ public class Hardware extends LinearOpMode
 
     BNO055IMU imu;
     Orientation angles;
-    private double previousHeading = 0; //Outside of method
+    private double previousHeading = 0;
     private double integratedHeading = 0;
 
     //private HardwareMap aMap;
@@ -192,7 +197,17 @@ public class Hardware extends LinearOpMode
         motorBackLeft.setPower(0);
     }
 
-
+    /**
+     * Drives the robot forward/backwards a set number of inches at a set power.
+     *
+     * <p>Issues: Inch value isn't correct due to changing the tire,
+     * going to fix this post season so I don't have to rewrite auto</p>
+     *
+     *
+     * @param forward sets direction the robot will drive in
+     * @param distanceInches distance in inches the robot will drive [positive]
+     * @param power power it will drive at [-1,1]
+     */
     public void drive(boolean forward, int distanceInches, double power)
     {
 
@@ -285,6 +300,17 @@ public class Hardware extends LinearOpMode
 
 
     }
+
+    /**
+     * Drives the robot forward/backwards a set number of encoderticks at a set power.
+     *
+     * <p>Issues: Working fine right now, fairly consistent</p>
+     *
+     *
+     * @param forward sets direction the robot will drive in
+     * @param distanceEncodeVal distance in encoder ticks the robot will drive [0,∞?]
+     * @param power power it will drive at [-1,1]
+     */
     public void drivePureEncoder(boolean forward, int distanceEncodeVal, double power)
     {
 
@@ -378,7 +404,18 @@ public class Hardware extends LinearOpMode
     }
 
 
-
+    /**
+     * Drives the robot left/right a set number of inches at a set power
+     *
+     * <p>Issues: Gets stuck running sometimes as it never reaches the target value. I'm not using this right now till I fix it.
+     * Inch values are also not accurate probably due to switching the wheels.</p>
+     *
+     *
+     *
+     * @param left direction the robot will drive
+     * @param distanceInches distance in inches the robot will drive [0,∞?]
+     * @param power power it will drive at [-1,1]
+     */
     public void strafe(boolean left, int distanceInches,double power)
     {
         int distanceEncodeVal;
@@ -463,6 +500,20 @@ public class Hardware extends LinearOpMode
         motorBackRight.setPower(0);
 
     }
+
+    /**
+     * Drives the robot left/right a set number of inches at a set power
+     *
+     * <p>Issues: Haven't used this enough to determine the issues it might work though
+     * I would like to calculate the drive time instead of doing it manually</p>
+     *
+     *
+     *
+     * @param left direction the robot will drive
+     * @param distanceEncodeVal distance in inches the robot will drive [0,∞?]
+     * @param power power it will drive at [-1,1]
+     * @param driveTimeInSeconds Amount of time the strafe will be allowed to go in seconds.
+     */
     public void strafePureEncoder(boolean left, int distanceEncodeVal,double power, int driveTimeInSeconds)
     {
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -546,6 +597,16 @@ public class Hardware extends LinearOpMode
 
     }
 
+    /**
+     * Controls the teleop movement of the robot. Allows us to go forward and backward, turn, strafe,
+     * and go in diagonals by moving the stick diagonally
+     *
+     * Issues: Works beautifully so far
+     *
+     * @param joystickX x value of the joystick, this is used for strafing
+     * @param joystickY y value of the joystick this is used for forward/backwards movement
+     * @param rotation x value of other joystick, used for turning
+     */
     public void driveOmniDir(double joystickX, double joystickY, double rotation)
      {
          /**                   | Forward and|
@@ -555,11 +616,27 @@ public class Hardware extends LinearOpMode
         motorFrontLeft.setPower(-joystickY + joystickX + rotation);
         motorBackLeft.setPower(-joystickY - joystickX + rotation);
 
+         /**motorFrontRight.setPower(--1 - joystickX - rotation);
+         motorBackRight.setPower(--1 + joystickX - rotation);
+         motorFrontLeft.setPower(--1 + joystickX + rotation);
+         motorBackLeft.setPower(--1 - joystickX + rotation);**/
+
          /*motorFrontRight.setPower(joystickY + joystickX - rotation);
          motorBackRight.setPower(joystickY - joystickX - rotation);
          motorFrontLeft.setPower(-joystickY + joystickX - rotation);
          motorBackLeft.setPower(-joystickY - joystickX - rotation);*/
     }
+
+    /**
+     * Controls the robot using tank drive, this is only used in our testing code just to see what tank drive would feel like.
+     * we can move in all directions except diagonals (probably).
+     *
+     * <p>Issues: none/haven't used it enough to identify issues</p>
+     *
+     * @param joystickL values of the left joystick, used for control of left wheels
+     * @param joystickR values of right joystick, used for control of right wheels
+     * @param joystickX x value of joystick, used to strafe left and right
+     */
     public void driveTank(double joystickL, double joystickR, double joystickX)
     {
         /**                   | Forward,    |           |
@@ -575,8 +652,14 @@ public class Hardware extends LinearOpMode
          motorFrontLeft.setPower(-joystickY + joystickX - rotation);
          motorBackLeft.setPower(-joystickY - joystickX - rotation);*/
     }
-    /*driveTank(gamepad1.left_stick_Y, gamepad1.right_stick_Y, gamepad1.left_stick_X);*/
 
+    /**
+     * Gives back the robots integrated heading, mainly used in autonomous
+     *
+     * <p>Issues: had issues in the past, but seems to be working currently</p>
+     *
+     * @return integrated heading in degrees [-180,180]
+     */
     public double getIntegratedHeading() {
         double currentHeading = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         double deltaHeading = currentHeading - previousHeading;
@@ -594,7 +677,14 @@ public class Hardware extends LinearOpMode
 
     }
 
-    public void turn(int targetDegrees, double power, double correctionPower)
+    /**
+     * Turns the the robot to the target degrees at set power then corrects with correction power. This uses the gyro sensor which we don't use anymore.
+     *
+     * @param targetDegrees target degrees we want to turn
+     * @param power power we want to turn towards target with [-1,1]
+     * @param correctionPower power we want to correct the turn with normally lower than normal power for more precision [-1,1]
+     */
+    @Deprecated void turn(int targetDegrees, double power, double correctionPower)
     {
 
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -770,6 +860,15 @@ public class Hardware extends LinearOpMode
         motorBackRight.setPower(0);
     }
 
+    /**
+     * Turns the the robot to the target degrees at set power then corrects with correction power. This uses the imu instead of gyro sensor.
+     *
+     * <p>Issues: Used to sometimes just not turn, I think this is fixed it hasn't happened recently.</p>
+     *
+     * @param targetDegrees target degrees we want to turn
+     * @param power power we want to turn towards target with [-1,1]
+     * @param correctionPower power we want to correct the turn with normally lower than normal power for more precision [-1,1]
+     */
     public void turnIMU(int targetDegrees, double power, double correctionPower)
     {
 
@@ -947,6 +1046,11 @@ public class Hardware extends LinearOpMode
         motorBackRight.setPower(0);
     }
 
+    /**
+     * Sets all drive motors to a certain power. Used to save a few lines in autonomous mainly
+     *
+     * @param motorPower power to set all motor s to [-1,1]
+     */
     public void setDrivePower(float motorPower)
     {
         motorFrontLeft.setPower(motorPower);
@@ -954,6 +1058,10 @@ public class Hardware extends LinearOpMode
         motorFrontRight.setPower(motorPower);
         motorBackRight.setPower(motorPower);
     }
+
+    /**
+     * Some code I was trying to set all motors to a certain power for debugging. Just realized that setDrivePower does basically the same thing.
+     */
     public void motorTest()
     {
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -966,6 +1074,11 @@ public class Hardware extends LinearOpMode
         motorFrontRight.setPower(0.5);
         motorBackRight.setPower(0.5);
     }
+
+    /**
+     * Takes in a motor as input and runs it at full power. For debug mainly and just was testing taking motors as an input. Not very useful.
+     * @param inputMotor motor to be set at 1 power
+     */
     public void motorTester(DcMotor inputMotor)
     {
         inputMotor.setPower(1);

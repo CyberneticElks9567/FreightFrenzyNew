@@ -10,6 +10,13 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class FreightDetector extends OpenCvPipeline {
+    /**
+     * Programmer:    Sean Pakros
+     * Date Created:  12/15/21
+     * Purpose: Code for detecting our shipping element using openCV.
+     * This is based off of another teams code (Wolf Corp Robotics 12525)
+     * for detecting skystones in a previous season which I then modified to work for this season and our shipping element.
+     */
     Telemetry telemetry;
     Mat mat = new Mat();
     public enum Location {

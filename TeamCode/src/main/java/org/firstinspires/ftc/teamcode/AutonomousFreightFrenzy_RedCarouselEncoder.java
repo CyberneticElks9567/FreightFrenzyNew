@@ -11,7 +11,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Red Carousel Autonomous Encoder", group = "Linear OpMode")
 public class AutonomousFreightFrenzy_RedCarouselEncoder extends LinearOpMode {
-
+    /**
+     * Programmer:    Sean Pakros
+     * Date Created:  12/09/21 (bit earlier then this as it was made during the competition then pushed later)
+     * Purpose: Old autonomous for if we start by the red carousel, this one was encoder based so it was a bit
+     * more accurate then the time one.
+     */
     OpMode opmode;
 
     private String Date;

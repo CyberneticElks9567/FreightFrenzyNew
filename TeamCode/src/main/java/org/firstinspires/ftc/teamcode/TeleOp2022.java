@@ -7,6 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "2022 TeleOp -CHOOSE THIS ONE-", group = "TeleOp")
+/**
+ * Programmer:    Sean Pakros
+ * Date Created:  9/25/21
+ * Purpose: This is our main teleop for driver controlled in freight frenzy season
+ */
 public class TeleOp2022 extends LinearOpMode
 {
     OpMode opmode;
@@ -41,16 +46,19 @@ public class TeleOp2022 extends LinearOpMode
             telemetry.addData("motorWinch Position: ", h.motorWinch.getCurrentPosition() + " busy =" + h.motorWinch.isBusy());
             telemetry.addData("motorArm Position: ", h.motorArm.getCurrentPosition() + " busy =" + h.motorArm.isBusy());
             telemetry.addData("servoIntake: ", h.servoIntake.getPosition());
-            telemetry.addData("slowdown bool: ", slow);
-            telemetry.addData("armSpeedUp: ", armSpeedUp);
-            telemetry.addData("armSpeedDown: ", armSpeedDown);
             telemetry.addData("motorFrontLeft encoder value: ",h.motorFrontLeft.getCurrentPosition());
             telemetry.addData("motorFrontRight encoder value: ",h.motorFrontRight.getCurrentPosition());
             telemetry.addData("motorBackLeft encoder value: ",h.motorBackLeft.getCurrentPosition());
             telemetry.addData("motorBackRight encoder value: ",h.motorBackRight.getCurrentPosition());
             telemetry.update();
             slow = gamepad1.a;
+            /**Start drive system**/
             h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+            /** These are what I call "Fine Tuning Controls" (FTC) which are used for slow accurate movements
+             *  for actions such as placing the shipping element these would probably be the first thing I remove
+             *  if I needed more controls
+             **/
             if(gamepad1.dpad_left || gamepad2.dpad_left)
             {
                 h.motorFrontLeft.setPower(-.2);
@@ -79,13 +87,17 @@ public class TeleOp2022 extends LinearOpMode
                 h.motorBackLeft.setPower(-.2);
                 h.motorBackRight.setPower(-.2);
             }
+            /** END Fine Tuning Controls**/
 
 
+            /** Toggle code for opening and closing the claw, if you press x it will alternate between being closed and opened enough for one block
+             *  If you press y it will open fully we rarely open it fully as it adds risk that we may grab two blocks
+             **/
             if(pressedIntake & !pressedLastIterationIntake)
             {
-                if(h.servoIntake.getPosition() >= .3)
+                if(h.servoIntake.getPosition() > .55)
                 {
-                    h.servoIntake.setPosition(.1); //0 .1
+                    h.servoIntake.setPosition(.4); //0 .1
                 }
                 else
                 {
@@ -93,13 +105,12 @@ public class TeleOp2022 extends LinearOpMode
                 }
 
             }
-
             if (gamepad1.y)
             {
                 h.servoIntake.setPosition(0);
             }
 
-            //.1 is open
+            /** END CLAW CONTROL**/
 
             /*if(pressedSl & !pressedLastIterationCarousel)
             {
@@ -117,6 +128,7 @@ public class TeleOp2022 extends LinearOpMode
                 }
 
             }*/
+            /** Simple controls for the carousel spin one way when 'b' is pressed another way when 'x' is pressed **/
             if (gamepad2.b)
             {
                 h.motorCarousel.setPower(.4);
@@ -129,7 +141,7 @@ public class TeleOp2022 extends LinearOpMode
             {
                 h.motorCarousel.setPower(0);
             }
-
+            /** END CAROUSEL CONTROL **/
             /*if(pressedCarouselReverse & !pressedLastIterationCarouselReverse)
             {
                 if(h.motorCarousel.getPower() == 0)
@@ -142,6 +154,8 @@ public class TeleOp2022 extends LinearOpMode
                 }
 
             }*/
+            /** Our arm controls this rotates the arm so we can reach the different levels if 'a' on gamepad1 is held while moving the arm
+             * it will move at half speed for more precision. This is helpful for precision placing such as the team shipping element**/
             if(gamepad1.right_trigger > .01 /*&& h.motorArm.getPosition() < high limit*/)
             {
                 h.motorArm.setPower(armSpeedDown);

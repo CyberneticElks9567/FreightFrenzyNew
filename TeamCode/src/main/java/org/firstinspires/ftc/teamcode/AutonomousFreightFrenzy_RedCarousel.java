@@ -9,7 +9,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Red Carousel Autonomous---------this one if by red carousel-------", group = "Linear OpMode")
 public class AutonomousFreightFrenzy_RedCarousel extends LinearOpMode {
-
+    /**
+     * Programmer:    Sean Pakros
+     * Date Created:  11/21/21
+     * Purpose: Old autonomous for if we start by the red carousel, this one was time based.
+     */
     OpMode opmode;
 
     private String Date;

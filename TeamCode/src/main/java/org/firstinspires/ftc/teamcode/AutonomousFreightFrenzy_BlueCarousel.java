@@ -2,14 +2,20 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @Autonomous(name = "Blue Carousel Autonomous---------this one if by blue carousel-------", group = "Linear OpMode")
 public class AutonomousFreightFrenzy_BlueCarousel extends LinearOpMode {
-
+    /**
+     * Programmer:    Sean Pakros
+     * Date Created:  12/01/21
+     * Purpose: Old autonomous for if we start by the blue carousel, this one was time based.
+     */
     OpMode opmode;
 
     private String Date;
