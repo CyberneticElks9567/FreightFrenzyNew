@@ -16,7 +16,12 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
     OpenCvCamera webCam;
     int ShippingElementPosFromLeft;
 
-
+    public enum Position {
+        TOP,
+        MIDDLE,
+        BOTTOM
+    }
+    Position position;
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -42,6 +47,7 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
             telemetry.addData("Init Error:", "Something failed to initialize");
             e.printStackTrace();
         }
+
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -72,123 +78,65 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
         h.servoIntake.setPosition(1);
 
         waitForStart();
-        telemetry.addData("iteration:", 3);
-        telemetry.update();
         switch (detector.getLocation()) {
-            case LEFT: //Top
-                /** GETTING READY TO DROP BLOCK **/
-                h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            case LEFT: //bottom reversed if blue
+                position = Position.BOTTOM;
+                break;
+            case MIDDLE://middle reversed if blue
+                position = Position.MIDDLE;
+                break;
+            case RIGHT://top reversed if blue
+                position = Position.TOP;
+        }
+        webCam.stopStreaming();
+        telemetry.update();
+        /** GETTING READY TO DROP BLOCK **/
 
-                h.motorFrontLeft.setTargetPosition(1550);
-                h.motorFrontRight.setTargetPosition(-1550);
-                h.motorBackLeft.setTargetPosition(-1550);
-                h.motorBackRight.setTargetPosition(1550);
+        h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                h.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.setDrivePower((float) 0.2);
-                h.sleep(5000);
+        h.motorFrontLeft.setTargetPosition(1550);
+        h.motorFrontRight.setTargetPosition(-1550);
+        h.motorBackLeft.setTargetPosition(-1550);
+        h.motorBackRight.setTargetPosition(1550);
 
-                h.drivePureEncoder(true,800,.3);
-                /** DROPPING BLOCK **/
+        h.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        h.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        h.motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        h.motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        h.setDrivePower((float) 0.2);
+        h.sleep(5000);
 
+        h.drivePureEncoder(true,800,.3);
+        switch (position)
+        {
+            case MIDDLE:
+                telemetry.addData("position: ", "top");
                 h.motorWinch.setTargetPosition(400);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 h.motorWinch.setPower(.5);
 
                 while (h.motorWinch.isBusy() && !isStopRequested())
                 {
-                    telemetry.addData("motorWinch Pos: ", h.motorWinch.getCurrentPosition());
+                    telemetry.addData("motorArm Pos: ", h.motorWinch.getCurrentPosition());
                     telemetry.update();
                 }
 
                 h.servoIntake.setPosition(0);
 
-                h.sleep(300);
-
                 h.motorWinch.setTargetPosition(0);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 h.motorWinch.setPower(.5);
-
-                break;
-            case MIDDLE://middle
-                /** GETTING READY TO DROP BLOCK **/
-                h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                h.motorFrontLeft.setTargetPosition(1550);
-                h.motorFrontRight.setTargetPosition(-1550);
-                h.motorBackLeft.setTargetPosition(-1550);
-                h.motorBackRight.setTargetPosition(1550);
-
-                h.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.setDrivePower((float) 0.2);
-                h.sleep(5000);
-
-                h.drivePureEncoder(true,800,.3);
-                /** DROPPING BLOCK **/
-                h.motorArm.setTargetPosition(968);
-                h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorArm.setPower(.5);
-
-                while (h.motorArm.isBusy() && !isStopRequested())
-                {
-                    telemetry.addData("motorArm Pos: ", h.motorArm.getCurrentPosition());
-                    telemetry.update();
-                }
-
-                h.motorWinch.setTargetPosition(140);
-                h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorWinch.setPower(.5);
-
-                while (h.motorWinch.isBusy() && !isStopRequested())
-                {
-                    telemetry.addData("motorWinch Pos: ", h.motorWinch.getCurrentPosition());
-                    telemetry.update();
-                }
-
-                h.servoIntake.setPosition(0);
-
                 h.sleep(300);
-
-                h.motorWinch.setTargetPosition(0);
-                h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorWinch.setPower(.5);
                 break;
-            case RIGHT://bottom
-                /** GETTING READY TO DROP BLOCK **/
-                h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                h.motorFrontLeft.setTargetPosition(1550);
-                h.motorFrontRight.setTargetPosition(-1550);
-                h.motorBackLeft.setTargetPosition(-1550);
-                h.motorBackRight.setTargetPosition(1550);
-
-                h.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.setDrivePower((float) 0.2);
-                h.sleep(5000);
-
-                h.drivePureEncoder(true,800,.3);
-                /** DROPPING BLOCK **/
+            case TOP:
+                telemetry.addData("position: ", "middle");
                 h.motorArm.setTargetPosition(500);
                 h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                h.motorArm.setPower(.5);
+                h.motorArm.setPower(.7);
 
                 while (h.motorArm.isBusy() && !isStopRequested())
                 {
@@ -214,6 +162,38 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 h.motorWinch.setPower(.5);
                 break;
+
+            case BOTTOM:
+                telemetry.addData("position: ", "bottom");
+                h.motorArm.setTargetPosition(988);
+                h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                h.motorArm.setPower(.7);
+
+                while (h.motorArm.isBusy() && !isStopRequested())
+                {
+                    telemetry.addData("motorArm Pos: ", h.motorArm.getCurrentPosition());
+                    telemetry.update();
+                }
+
+                h.motorWinch.setTargetPosition(112);
+                h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                h.motorWinch.setPower(.5);
+
+                while (h.motorWinch.isBusy() && !isStopRequested())
+                {
+                    telemetry.addData("motorWinch Pos: ", h.motorWinch.getCurrentPosition());
+                    telemetry.update();
+                }
+
+                h.servoIntake.setPosition(0);
+
+                h.sleep(300);
+
+                h.motorWinch.setTargetPosition(0);
+                h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                h.motorWinch.setPower(.5);
+                break;
+
         }
 
         webCam.stopStreaming();
@@ -223,6 +203,9 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
         h.motorArm.setTargetPosition(0);
         h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         h.motorArm.setPower(.5);
+        h.motorWinch.setTargetPosition(0);
+        h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        h.motorWinch.setPower(.5);
 
 
         /*h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -77,17 +77,16 @@ public class TeleOp2022Testing extends LinearOpMode
 
             if(pressedIntake & !pressedLastIterationIntake)
             {
-                if(h.servoIntake.getPosition() >= .3)
+                if(h.servoIntake.getPosition() > .55)
                 {
-                    h.servoIntake.setPosition(.1); //0 .1
+                    h.servoIntake.setPosition(.4); //0 .1
                 }
                 else
                 {
-                    h.servoIntake.setPosition(.45); //1 .3
+                    h.servoIntake.setPosition(1); //1 .3
                 }
 
             }
-
             if (gamepad1.y)
             {
                 h.servoIntake.setPosition(0);
@@ -151,7 +150,9 @@ public class TeleOp2022Testing extends LinearOpMode
             switch (armLevel)
             {
                 case 0:
-
+                    h.motorArm.setTargetPosition(1470);
+                    h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    h.motorArm.setPower(1);
                 break;
 
                 case 1:

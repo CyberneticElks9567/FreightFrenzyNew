@@ -36,6 +36,7 @@ public class TeleOp2022 extends LinearOpMode
         boolean slow = false;
         double armSpeedUp = -1;
         double armSpeedDown = .8;
+        boolean limitSwitch = true;
 
         waitForStart();
         while (opModeIsActive())
@@ -131,11 +132,11 @@ public class TeleOp2022 extends LinearOpMode
             /** Simple controls for the carousel spin one way when 'b' is pressed another way when 'x' is pressed **/
             if (gamepad2.b)
             {
-                h.motorCarousel.setPower(.4);
+                h.motorCarousel.setPower(.35); //.4
             }
             if (gamepad2.x)
             {
-                h.motorCarousel.setPower(-.4);
+                h.motorCarousel.setPower(-.35); //.4
             }
             if (!gamepad2.x && !gamepad2.b)
             {
@@ -151,19 +152,40 @@ public class TeleOp2022 extends LinearOpMode
                 else
                 {
                     h.motorCarousel.setPower(0);
-                }
+                }*/
 
-            }*/
-            /** Our arm controls this rotates the arm so we can reach the different levels if 'a' on gamepad1 is held while moving the arm
+            /** Emergency switch to disable the limits on the arm in case we start the arm in the wrong position **/
+            if(gamepad2.back)
+            {
+                limitSwitch = !limitSwitch;
+            }
+
+            /** Our arm controls, this rotates the arm so we can reach the different levels. If 'a' on gamepad1 is held while moving the arm
              * it will move at half speed for more precision. This is helpful for precision placing such as the team shipping element**/
-            if(gamepad1.right_trigger > .01 /*&& h.motorArm.getPosition() < high limit*/)
+            if(limitSwitch)
             {
-                h.motorArm.setPower(armSpeedDown);
+                if(gamepad1.right_trigger > .01 && h.motorArm.getCurrentPosition() < 1470)
+                {
+                    h.motorArm.setPower(armSpeedDown);
+                }
+                if (gamepad1.right_bumper && h.motorArm.getCurrentPosition() > 0)
+                {
+                    h.motorArm.setPower(armSpeedUp);
+                }
             }
-            if (gamepad1.right_bumper /*&& h.motorArm.getPosition() > low limit*/)
+            else
             {
-                h.motorArm.setPower(armSpeedUp);
+                if(gamepad1.right_trigger > .01)
+                {
+                    h.motorArm.setPower(armSpeedDown);
+                }
+                if (gamepad1.right_bumper)
+                {
+                    h.motorArm.setPower(armSpeedUp);
+                }
             }
+
+
             if(!gamepad1.right_bumper && gamepad1.right_trigger == 0)
             {
                 h.motorArm.setPower(0);
