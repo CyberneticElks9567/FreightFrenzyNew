@@ -162,28 +162,28 @@ public class TeleOp2022 extends LinearOpMode
 
             /** Our arm controls, this rotates the arm so we can reach the different levels. If 'a' on gamepad1 is held while moving the arm
              * it will move at half speed for more precision. This is helpful for precision placing such as the team shipping element**/
-            if(limitSwitch)
+            /*if(limitSwitch)
             {
                 if(gamepad1.right_trigger > .01 && h.motorArm.getCurrentPosition() < 1470)
                 {
                     h.motorArm.setPower(armSpeedDown);
                 }
-                if (gamepad1.right_bumper && h.motorArm.getCurrentPosition() > 0)
+                if (gamepad1.right_bumper && h.motorArm.getCurrentPosition() > -200)
                 {
                     h.motorArm.setPower(armSpeedUp);
                 }
-            }
-            else
+            }*/
+
+
+            if(gamepad1.right_trigger > .01)
             {
-                if(gamepad1.right_trigger > .01)
-                {
-                    h.motorArm.setPower(armSpeedDown);
-                }
-                if (gamepad1.right_bumper)
-                {
-                    h.motorArm.setPower(armSpeedUp);
-                }
+                h.motorArm.setPower(armSpeedDown);
             }
+            if (gamepad1.right_bumper)
+            {
+                    h.motorArm.setPower(armSpeedUp);
+            }
+
 
 
             if(!gamepad1.right_bumper && gamepad1.right_trigger == 0)
