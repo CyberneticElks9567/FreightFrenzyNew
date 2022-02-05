@@ -98,7 +98,7 @@ public class TeleOp2022 extends LinearOpMode
             {
                 if(h.servoIntake.getPosition() > .55)
                 {
-                    h.servoIntake.setPosition(.4); //0 .1
+                    h.servoIntake.setPosition(.2); //0 .1
                 }
                 else
                 {

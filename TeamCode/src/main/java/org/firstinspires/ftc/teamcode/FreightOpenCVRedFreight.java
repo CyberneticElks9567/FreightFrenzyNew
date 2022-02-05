@@ -107,8 +107,8 @@ public class FreightOpenCVRedFreight extends LinearOpMode {
                     telemetry.update();
                 }
 
+                h.sleep(300);
                 h.servoIntake.setPosition(0);
-
                 h.sleep(300);
 
                 h.motorWinch.setTargetPosition(0);
@@ -157,8 +157,8 @@ public class FreightOpenCVRedFreight extends LinearOpMode {
                     telemetry.update();
                 }
 
+                h.sleep(300);
                 h.servoIntake.setPosition(0);
-
                 h.sleep(300);
 
                 h.motorWinch.setTargetPosition(0);
@@ -206,8 +206,8 @@ public class FreightOpenCVRedFreight extends LinearOpMode {
                     telemetry.update();
                 }
 
+                h.sleep(300);
                 h.servoIntake.setPosition(0);
-
                 h.sleep(300);
 
                 h.motorWinch.setTargetPosition(0);

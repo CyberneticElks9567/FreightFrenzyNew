@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="Blue Carousel Detector-----DON't RUN", group="Auto")
+@Autonomous(name="Blue Carousel Detector", group="Auto")
 public class FreightOpenCVBlueCarousel extends LinearOpMode {
     Hardware h = new Hardware();
     OpenCvCamera webCam;
@@ -187,7 +187,7 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
         switch (position)
         {
             case TOP:
-                h.motorWinch.setTargetPosition(400);
+                h.motorWinch.setTargetPosition(418);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 h.motorWinch.setPower(.5);
 
@@ -286,7 +286,7 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
 
 
 
-        h.motorArm.setTargetPosition(500);
+        h.motorArm.setTargetPosition(0);
         h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         h.motorArm.setPower(.7);
 

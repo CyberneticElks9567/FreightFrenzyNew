@@ -114,6 +114,15 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
         {
             case MIDDLE:
                 telemetry.addData("position: ", "top");
+                h.motorArm.setTargetPosition(0);
+                h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                h.motorArm.setPower(.7);
+
+                while (h.motorArm.isBusy() && !isStopRequested())
+                {
+                    telemetry.addData("motorArm Pos: ", h.motorArm.getCurrentPosition());
+                    telemetry.update();
+                }
                 h.motorWinch.setTargetPosition(400);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 h.motorWinch.setPower(.5);
