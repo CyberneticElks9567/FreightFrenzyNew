@@ -402,6 +402,97 @@ public class Hardware extends LinearOpMode
 
 
     }
+    public void drivePID(double angle, int distanceInches, double power)
+    {
+        int distanceEncodeVal;
+        final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: Gobuilda 13.7:1 Ratio, 435 RPM
+        final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+        final double     WHEEL_DIAMETER_INCHES   = 3.69 ;     // For figuring circumference
+        final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        distanceEncodeVal = (int) Math.round((distanceInches * COUNTS_PER_INCH));
+
+        if(distanceInches > 0)
+        {
+            motorFrontLeft.setTargetPosition(distanceEncodeVal);
+            motorFrontRight.setTargetPosition(distanceEncodeVal);
+            motorBackLeft.setTargetPosition(distanceEncodeVal);
+            motorBackRight.setTargetPosition(distanceEncodeVal);
+        }
+        else
+        {
+            motorFrontLeft.setTargetPosition(-distanceEncodeVal);
+            motorFrontRight.setTargetPosition(-distanceEncodeVal);
+            motorBackLeft.setTargetPosition(-distanceEncodeVal);
+            motorBackRight.setTargetPosition(-distanceEncodeVal);
+        }
+
+        motorFrontLeft.setPower(power);
+        motorFrontRight.setPower(power);
+        motorBackLeft.setPower(power);
+        motorBackRight.setPower(power);
+
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        /*
+        while((motorFrontLeft.getCurrentPosition() > distanceEncodeVal) && opModeIsActive())
+        {
+            telemetry.addData("Running", "...");
+            telemetry.update();
+        }
+        */
+
+        //telemetry.addData("Running", "...");
+        //telemetry.update();
+
+        if(distanceInches > 0)
+        {
+
+            while (motorFrontRight.getCurrentPosition() < distanceEncodeVal - 20 && !isStopRequested())
+            {
+
+            }
+        }
+        else
+        {
+
+            while (motorFrontRight.getCurrentPosition() > -distanceEncodeVal + 20 && !isStopRequested())
+            {
+
+            }
+
+        }
+
+        //telemetry.addData("Finished", ".");
+        //telemetry.update();
+
+
+
+        /*motorFrontLeft.setTargetPosition(0);
+        motorFrontRight.setTargetPosition(0);
+        motorBackLeft.setTargetPosition(0);
+        motorBackRight.setTargetPosition(0);*/
+
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+
+
+    }
 
 
     /**
@@ -652,6 +743,19 @@ public class Hardware extends LinearOpMode
          motorFrontLeft.setPower(-joystickY + joystickX - rotation);
          motorBackLeft.setPower(-joystickY - joystickX - rotation);*/
     }
+    public void driveThrottleField(double joystickX, double joystickY, double turn)
+    {
+
+        double x_rotated = joystickX * Math.cos(getIntegratedHeading()) - joystickY * Math.sin(getIntegratedHeading());
+        double y_rotated = joystickX * Math.sin(getIntegratedHeading()) + joystickY * Math.cos(getIntegratedHeading());
+
+        // x, y, theta input mixing
+        motorFrontLeft.setPower(x_rotated + y_rotated + turn);
+        motorBackLeft.setPower(x_rotated - y_rotated + turn);
+        motorFrontRight.setPower(x_rotated - y_rotated - turn);
+        motorBackRight.setPower(x_rotated + y_rotated - turn);
+    }
+
 
     /**
      * Gives back the robots integrated heading, mainly used in autonomous
@@ -1083,6 +1187,37 @@ public class Hardware extends LinearOpMode
     {
         inputMotor.setPower(1);
         inputMotor.getPower();
+
+    }
+
+    public void driveStraight(double power, double time)
+    {
+        double desiredHeading = getIntegratedHeading();
+        double currentHeading = getIntegratedHeading();
+        double error = 0.0;
+        long beginning = System.currentTimeMillis();
+        long end = beginning + driveTime;
+
+        setDrivePower((float) power);
+        while(System.currentTimeMillis() != end)
+        {
+            currentHeading = getIntegratedHeading();
+            error = ((desiredHeading - currentHeading) / 180);
+            telemetry.addData("Error: ", error);
+            telemetry.addData("Current Heading: ", getIntegratedHeading());
+            telemetry.update();
+            /*if (differential > 0)
+            {
+                motorFrontLeft.setPower(power);
+                motorBackLeft.setPower(power);
+                motorFrontRight.setPower(differential);
+                motorBackRight.setPower(differential);
+            }*/
+
+        }
+
+
+
 
     }
 }
