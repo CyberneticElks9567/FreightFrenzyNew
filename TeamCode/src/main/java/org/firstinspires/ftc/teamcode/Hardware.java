@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -74,6 +75,16 @@ public class Hardware extends LinearOpMode
     DcMotor.RunMode initialMode = null;
 
     int driveTime;
+
+    double driveTurn;
+    double gamepadXCoordinate;
+    double gamepadYCoordinate;
+    double gamepadHypot;
+    double gamepadDegree;
+    double robotDegree;
+    double movementDegree;
+    double gamepadXControl;
+    double gamepadYControl;
 
 
     private Telemetry telemetry;
@@ -743,17 +754,39 @@ public class Hardware extends LinearOpMode
          motorFrontLeft.setPower(-joystickY + joystickX - rotation);
          motorBackLeft.setPower(-joystickY - joystickX - rotation);*/
     }
-    public void driveThrottleField(double joystickX, double joystickY, double turn)
+    public void driveFieldRelative(double joystickX, double joystickY, double turn)
     {
 
-        double x_rotated = joystickX * Math.cos(getIntegratedHeading()) - joystickY * Math.sin(getIntegratedHeading());
-        double y_rotated = joystickX * Math.sin(getIntegratedHeading()) + joystickY * Math.cos(getIntegratedHeading());
+        driveTurn = -gamepad1.left_stick_x;
 
-        // x, y, theta input mixing
-        motorFrontLeft.setPower(x_rotated + y_rotated + turn);
-        motorBackLeft.setPower(x_rotated - y_rotated + turn);
-        motorFrontRight.setPower(x_rotated - y_rotated - turn);
-        motorBackRight.setPower(x_rotated + y_rotated - turn);
+        gamepadXCoordinate = gamepad1.right_stick_x; //this simply gives our x value relative to the driver
+        gamepadYCoordinate = -gamepad1.right_stick_y; //this simply gives our y vaue relative to the driver
+        gamepadHypot = Range.clip(Math.hypot(gamepadXCoordinate, gamepadYCoordinate), 0, 1);
+        //finds just how much power to give the robot based on how much x and y given by gamepad
+        //range.clip helps us keep our power within positive 1
+        // also helps set maximum possible value of 1/sqrt(2) for x and y controls if at a 45 degree angle (which yields greatest possible value for y+x)
+        gamepadDegree = Math.atan2(gamepadYCoordinate, gamepadXCoordinate);
+        //the inverse tangent of opposite/adjacent gives us our gamepad degree
+        robotDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        //gives us the angle our robot is at
+        movementDegree = gamepadDegree - robotDegree;
+        //adjust the angle we need to move at by finding needed movement degree based on gamepad and robot angles
+        gamepadXControl = Math.cos(Math.toRadians(movementDegree)) * gamepadHypot;
+        //by finding the adjacent side, we can get our needed x value to power our motors
+        double gamepadYControl = Math.sin(Math.toRadians(movementDegree)) * gamepadHypot;
+        //by finding the opposite side, we can get our needed y value to power our motors
+
+        /**
+         * again, make sure you've changed the motor names and variables to fit your team
+         */
+
+        //by mulitplying the gamepadYControl and gamepadXControl by their respective absolute values, we can guarantee that our motor powers will not exceed 1 without any driveTurn
+        //since we've maxed out our hypot at 1, the greatest possible value of x+y is (1/sqrt(2)) + (1/sqrt(2)) = sqrt(2)
+        //since (1/sqrt(2))^2 = 1/2 = .5, we know that we will not exceed a power of 1 (with no turn), giving us more precision for our driving
+        motorFrontRight.setPower(gamepadYControl * Math.abs(gamepadYControl) - gamepadXControl * Math.abs(gamepadXControl) + driveTurn);
+        motorBackRight.setPower(gamepadYControl * Math.abs(gamepadYControl) + gamepadXControl * Math.abs(gamepadXControl) + driveTurn);
+        motorFrontLeft.setPower(gamepadYControl * Math.abs(gamepadYControl) + gamepadXControl * Math.abs(gamepadXControl) - driveTurn);
+        motorBackLeft.setPower(gamepadYControl * Math.abs(gamepadYControl) - gamepadXControl * Math.abs(gamepadXControl) - driveTurn);
     }
 
 

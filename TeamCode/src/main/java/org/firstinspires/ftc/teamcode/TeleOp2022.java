@@ -47,10 +47,8 @@ public class TeleOp2022 extends LinearOpMode
             telemetry.addData("motorWinch Position: ", h.motorWinch.getCurrentPosition() + " busy =" + h.motorWinch.isBusy());
             telemetry.addData("motorArm Position: ", h.motorArm.getCurrentPosition() + " busy =" + h.motorArm.isBusy());
             telemetry.addData("servoIntake: ", h.servoIntake.getPosition());
-            telemetry.addData("motorFrontLeft encoder value: ",h.motorFrontLeft.getCurrentPosition());
-            telemetry.addData("motorFrontRight encoder value: ",h.motorFrontRight.getCurrentPosition());
-            telemetry.addData("motorBackLeft encoder value: ",h.motorBackLeft.getCurrentPosition());
-            telemetry.addData("motorBackRight encoder value: ",h.motorBackRight.getCurrentPosition());
+            telemetry.addData("servo toggle last iteration: ",pressedLastIterationIntake);
+            telemetry.addData("servo toggle: ",pressedIntake);
             telemetry.update();
             slow = gamepad1.a;
             /**Start drive system**/
