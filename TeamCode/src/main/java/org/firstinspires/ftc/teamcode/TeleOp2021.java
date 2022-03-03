@@ -60,7 +60,7 @@ public class TeleOp2021 extends LinearOpMode
             //telemetry.addData("range", String.format("%.01f in", h.distanceSensor.getDistance(DistanceUnit.INCH)));
             //telemetry.addData("Distance: ",h.distanceSensor.getDistance(DistanceUnit.INCH));
             telemetry.update();
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            //h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             boolean pressed = gamepad1.y;
             if(gamepad1.dpad_up)
             {

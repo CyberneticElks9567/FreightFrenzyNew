@@ -31,7 +31,7 @@ public class Post2020 extends LinearOpMode
         while (opModeIsActive())
         {
 
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            //h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if (gamepad1.a)
             {

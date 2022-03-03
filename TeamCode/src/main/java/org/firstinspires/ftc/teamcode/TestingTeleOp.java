@@ -50,7 +50,7 @@ public class TestingTeleOp extends LinearOpMode
             telemetry.addData("Green", h.colorSensor.green());
             telemetry.addData("Blue ", h.colorSensor.blue());
             telemetry.update();
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            //h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
          //The motorSwivel code used for testing.
 

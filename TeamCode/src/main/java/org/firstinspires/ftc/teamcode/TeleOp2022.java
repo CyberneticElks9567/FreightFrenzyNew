@@ -32,27 +32,31 @@ public class TeleOp2022 extends LinearOpMode
         telemetry.update();
 
         boolean pressedLastIterationIntake = false;
+        boolean pressedLastIterationWrist = false;
         boolean pressedLastIterationCarouselReverse = false;
         boolean slow = false;
         double armSpeedUp = -1;
         double armSpeedDown = .8;
         boolean limitSwitch = true;
+        double wristPos =.5;
+        boolean dpadDown = false, dpadUpPressed = false, dpadDownPressed = false;
 
         waitForStart();
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             boolean pressedIntake = gamepad1.x;
             //telemetry.addData("range", String.format("%.01f in", h.distanceSensor.getDistance(DistanceUnit.INCH)));
             //telemetry.addData("Distance: ",h.distanceSensor.getDistance(DistanceUnit.INCH));
             telemetry.addData("motorWinch Position: ", h.motorWinch.getCurrentPosition() + " busy =" + h.motorWinch.isBusy());
             telemetry.addData("motorArm Position: ", h.motorArm.getCurrentPosition() + " busy =" + h.motorArm.isBusy());
             telemetry.addData("servoIntake: ", h.servoIntake.getPosition());
-            telemetry.addData("servo toggle last iteration: ",pressedLastIterationIntake);
-            telemetry.addData("servo toggle: ",pressedIntake);
+            telemetry.addData("servoWrist: ", h.servoWrist.getPosition());
+            telemetry.addData("wristPos: ", wristPos);
+            telemetry.addData("servo toggle last iteration: ", pressedLastIterationIntake);
+            telemetry.addData("servo toggle: ", pressedIntake);
             telemetry.update();
             slow = gamepad1.a;
             /**Start drive system**/
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, slow, 2);
 
             /** These are what I call "Fine Tuning Controls" (FTC) which are used for slow accurate movements
              *  for actions such as placing the shipping element these would probably be the first thing I remove
@@ -88,15 +92,44 @@ public class TeleOp2022 extends LinearOpMode
             }
             /** END Fine Tuning Controls**/
 
+            /*if (gamepad1.dpad_down)
+                if (!dpadDownPressed)
+                {
+                    if (wristPos < .8)
+                    {
+                        wristPos += .1;
+                    }
+                    dpadDownPressed = true;
+                }
+                else
+                    dpadDownPressed = false;
+            if (gamepad1.dpad_up)
+                if (!dpadUpPressed)
+                {
+                    if (wristPos > .2) {
+                        wristPos -= .1;
+                    }
+                    dpadUpPressed = true;
+                }
+                else
+                    dpadUpPressed = false;
+                */
+            if(gamepad1.b)
+            {
+                h.servoWrist.setPosition(.5);
+                wristPos = .5;
+            }
+
+
 
             /** Toggle code for opening and closing the claw, if you press x it will alternate between being closed and opened enough for one block
              *  If you press y it will open fully we rarely open it fully as it adds risk that we may grab two blocks
              **/
             if(pressedIntake & !pressedLastIterationIntake)
             {
-                if(h.servoIntake.getPosition() > .55)
+                if(h.servoIntake.getPosition() > .8)
                 {
-                    h.servoIntake.setPosition(.2); //0 .1
+                    h.servoIntake.setPosition(.57); //0 .1
                 }
                 else
                 {
@@ -179,7 +212,7 @@ public class TeleOp2022 extends LinearOpMode
             }
             if (gamepad1.right_bumper)
             {
-                    h.motorArm.setPower(armSpeedUp);
+                h.motorArm.setPower(armSpeedUp);
             }
 
 
@@ -324,6 +357,7 @@ public class TeleOp2022 extends LinearOpMode
             }*/
 
 
+            h.servoWrist.setPosition(wristPos);
             pressedLastIterationIntake = pressedIntake;
         }
     }

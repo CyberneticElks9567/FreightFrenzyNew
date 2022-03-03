@@ -70,8 +70,9 @@ public class TeleOp2022Testing extends LinearOpMode
             telemetry.addData("motorBackRight encoder value: ",h.motorBackRight.getCurrentPosition());
             telemetry.addData("Degrees: ", h.getIntegratedHeading());
             telemetry.update();
+            boolean slow = false;
             //h.driveFieldRelative(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x);
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, slow, 2);
             if(gamepad1.dpad_left || gamepad2.dpad_left)
             {
                 h.motorFrontLeft.setPower(-.2);
@@ -118,13 +119,13 @@ public class TeleOp2022Testing extends LinearOpMode
             {
                 h.servoIntake.setPosition(0);
             }*/
-            if(gamepad1.b)
+            if(gamepad1.start)
             {
-                h.servoIntake.setPosition(.2);
+                h.servoIntake.setPosition(.57);
             }
             if(gamepad1.back)
             {
-                h.servoIntake.setPosition(.2);
+                h.servoIntake.setPosition(1);
             }
 
             //.1 is open
