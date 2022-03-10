@@ -6,12 +6,20 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Testing", group = "TeleOp")
 public class TeleOp2022Testing extends LinearOpMode
 {
     OpMode opmode;
+    enum ArmState {
+        ARM_START,
+        ARM_EXTEND,
+        ARM_DUMP,
+        ARM_RETRACT
+    };
 
+    ArmState armState;
     @Override
     public void runOpMode() {
         Hardware h = new Hardware();
@@ -55,6 +63,7 @@ public class TeleOp2022Testing extends LinearOpMode
         int      armLevel = 3;
         boolean bButton = false, aButtonPressed = false, bButtonPressed = false;
 
+        ElapsedTime armTimer = new ElapsedTime();
         waitForStart();
         while (opModeIsActive())
         {
@@ -183,7 +192,51 @@ public class TeleOp2022Testing extends LinearOpMode
                 h.motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 h.motorArm.setPower(1);
             }
-            switch (armLevel)
+            switch(armState)
+            {
+                case ARM_START:
+                // Waiting for some input
+                    if (gamepad1.x) {
+                        // x is pressed, start extending
+                        h.motorWinch.setTargetPosition(400);
+                        armState = armState.ARM_EXTEND;
+                    }
+                break;
+                case ARM_EXTEND:
+                    // check if the left has finished extending,
+                    // otherwise do nothing.
+                    if (Math.abs(h.motorWinch.getCurrentPosition() - 400) < 10) {
+                        // our threshold is within
+                        // 10 encoder ticks of our target.
+                        // this is pretty arbitrary, and would have to be
+                        // tweaked for each robot.
+
+                        // set the lift dump to dump
+                        h.servoIntake.setPosition(0);
+
+                        armTimer.reset();
+                        armState = armState.ARM_DUMP;
+                    }
+                    break;
+                case ARM_DUMP:
+                    if (armTimer.seconds() >= .5) {
+                        // The robot waited long enough, time to start
+                        // retracting the lift
+                        h.motorWinch.setTargetPosition(0);
+                        armState = armState.ARM_RETRACT;
+                    }
+                    break;
+                case ARM_RETRACT:
+                    if (Math.abs(h.motorArm.getCurrentPosition() - 0) < 10) {
+                        armState = armState.ARM_START;
+                    }
+                    break;
+                default:
+                    // should never be reached, as liftState should never be null
+                    armState = armState.ARM_START;
+            }
+
+            /*switch (armLevel)
             {
                 case 0:
                     h.motorArm.setTargetPosition(1470);
@@ -231,7 +284,7 @@ public class TeleOp2022Testing extends LinearOpMode
                 else {}
             else
                 bButtonPressed = false;
-
+*/
             /*if(gamepad1.b)
             {
                 h.motorArm.setTargetPosition(500);
@@ -356,7 +409,8 @@ public class TeleOp2022Testing extends LinearOpMode
             }*/
 
 
-            pressedLastIterationIntake = pressedIntake;
+            //pressedLastIterationIntake = pressedIntake;
         }
     }
 }
+

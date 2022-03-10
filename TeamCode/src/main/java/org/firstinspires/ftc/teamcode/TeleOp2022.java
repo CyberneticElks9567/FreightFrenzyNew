@@ -43,6 +43,7 @@ public class TeleOp2022 extends LinearOpMode
 
         waitForStart();
         while (opModeIsActive()) {
+            boolean changed = false;
             boolean pressedIntake = gamepad1.x;
             //telemetry.addData("range", String.format("%.01f in", h.distanceSensor.getDistance(DistanceUnit.INCH)));
             //telemetry.addData("Distance: ",h.distanceSensor.getDistance(DistanceUnit.INCH));
@@ -67,29 +68,23 @@ public class TeleOp2022 extends LinearOpMode
              *  for actions such as placing the shipping element these would probably be the first thing I remove
              *  if I needed more controls
              **/
-            if(gamepad1.dpad_left || gamepad2.dpad_left)
-            {
+            if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 h.motorFrontLeft.setPower(-.2);
                 h.motorFrontRight.setPower(.2);
                 h.motorBackLeft.setPower(-.2);
                 h.motorBackRight.setPower(.2);
-            }
-            else if (gamepad1.dpad_right || gamepad2.dpad_right)
-            {
+            } else if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 h.motorFrontLeft.setPower(.2);
                 h.motorFrontRight.setPower(-.2);
                 h.motorBackLeft.setPower(.2);
                 h.motorBackRight.setPower(-.2);
             }
-            if(gamepad1.dpad_up || gamepad2.dpad_up)
-            {
+            if (gamepad1.dpad_up || gamepad2.dpad_up) {
                 h.motorFrontLeft.setPower(.2);
                 h.motorFrontRight.setPower(.2);
                 h.motorBackLeft.setPower(.2);
                 h.motorBackRight.setPower(.2);
-            }
-            else if(gamepad1.dpad_down || gamepad2.dpad_down)
-            {
+            } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 h.motorFrontLeft.setPower(-.2);
                 h.motorFrontRight.setPower(-.2);
                 h.motorBackLeft.setPower(-.2);
@@ -119,22 +114,30 @@ public class TeleOp2022 extends LinearOpMode
                 else
                     dpadUpPressed = false;
                 */
-            if(gamepad1.b)
-            {
+            if (gamepad1.b) {
                 h.servoWrist.setPosition(.5);
                 wristPos = .5;
             }
-            if(gamepad1.back)
-            {
+            if (gamepad1.back) {
                 h.servoWrist.setPosition(.9);
-                wristPos=.9;
+                wristPos = .9;
             }
-
 
 
             /** Toggle code for opening and closing the claw, if you press x it will alternate between being closed and opened enough for one block
              *  If you press y it will open fully we rarely open it fully as it adds risk that we may grab two blocks
              **/
+            //0 is opened-.57 is partial open, 1 is closed
+            /*if (gamepad1.x && !changed) {
+                if (h.servoIntake.getPosition() == 1) {
+                    h.servoIntake.setPosition(.57);
+                } else {
+                    h.servoIntake.setPosition(1);
+                }
+                changed = true;
+            } else if (!gamepad1.x){
+                changed = false;
+            }*/
             if(pressedIntake & !pressedLastIterationIntake)
             {
                 if(h.servoIntake.getPosition() > .8)
