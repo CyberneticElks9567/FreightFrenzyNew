@@ -50,9 +50,14 @@ public class TeleOp2022 extends LinearOpMode
             telemetry.addData("motorArm Position: ", h.motorArm.getCurrentPosition() + " busy =" + h.motorArm.isBusy());
             telemetry.addData("servoIntake: ", h.servoIntake.getPosition());
             telemetry.addData("servoWrist: ", h.servoWrist.getPosition());
+            telemetry.addData("motorFrontLeft: ", h.motorFrontLeft.getCurrentPosition());
+            telemetry.addData("motorFrontRight: ", h.motorFrontRight.getCurrentPosition());
+            telemetry.addData("motorBackLeft: ", h.motorBackLeft.getCurrentPosition());
+            telemetry.addData("motorBackRight: ", h.motorBackRight.getCurrentPosition());
             telemetry.addData("wristPos: ", wristPos);
             telemetry.addData("servo toggle last iteration: ", pressedLastIterationIntake);
             telemetry.addData("servo toggle: ", pressedIntake);
+            telemetry.addData("Motor reversed: ", "test");
             telemetry.update();
             slow = gamepad1.a;
             /**Start drive system**/
@@ -118,6 +123,11 @@ public class TeleOp2022 extends LinearOpMode
             {
                 h.servoWrist.setPosition(.5);
                 wristPos = .5;
+            }
+            if(gamepad1.back)
+            {
+                h.servoWrist.setPosition(.9);
+                wristPos=.9;
             }
 
 

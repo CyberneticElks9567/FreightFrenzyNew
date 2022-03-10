@@ -180,6 +180,11 @@ public class Hardware extends LinearOpMode
         //motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //motorWinch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -194,15 +199,23 @@ public class Hardware extends LinearOpMode
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
-        /* motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);*/
+        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        /*
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        * */
+
 
 
         motorFrontRight.setPower(0);
@@ -730,15 +743,16 @@ public class Hardware extends LinearOpMode
              motorBackLeft.setPower((-joystickY - joystickX + rotation) / slowFactor);
          }
 
+
          /**motorFrontRight.setPower(--1 - joystickX - rotation);
          motorBackRight.setPower(--1 + joystickX - rotation);
          motorFrontLeft.setPower(--1 + joystickX + rotation);
          motorBackLeft.setPower(--1 - joystickX + rotation);**/
 
-         /*motorFrontRight.setPower(joystickY + joystickX - rotation);
-         motorBackRight.setPower(joystickY - joystickX - rotation);
-         motorFrontLeft.setPower(-joystickY + joystickX - rotation);
-         motorBackLeft.setPower(-joystickY - joystickX - rotation);*/
+         /*motorFrontRight.setPower(-joystickY - joystickX - rotation);
+             motorBackRight.setPower(-joystickY + joystickX - rotation);
+             motorFrontLeft.setPower(-joystickY + joystickX + rotation);
+             motorBackLeft.setPower(-joystickY - joystickX + rotation);*/
     }
 
     /**
