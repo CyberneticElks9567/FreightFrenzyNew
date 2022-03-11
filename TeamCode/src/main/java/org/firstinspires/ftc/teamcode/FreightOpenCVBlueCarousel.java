@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -46,6 +47,10 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
             telemetry.addData("Init Error:", "Something failed to initialize");
             e.printStackTrace();
         }
+        h.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -198,6 +203,8 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
                 }
 
                 h.servoIntake.setPosition(0);
+
+                h.sleep(1000);
 
                 h.motorWinch.setTargetPosition(0);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);

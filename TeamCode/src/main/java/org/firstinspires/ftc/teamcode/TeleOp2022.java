@@ -51,15 +51,24 @@ public class TeleOp2022 extends LinearOpMode
             telemetry.addData("motorArm Position: ", h.motorArm.getCurrentPosition() + " busy =" + h.motorArm.isBusy());
             telemetry.addData("servoIntake: ", h.servoIntake.getPosition());
             telemetry.addData("servoWrist: ", h.servoWrist.getPosition());
+            telemetry.addData("motorFrontLeft: ", h.motorFrontLeft.getDirection());
+            telemetry.addData("motorFrontRight: ", h.motorFrontRight.getDirection());
+            telemetry.addData("motorBackLeft: ", h.motorBackLeft.getDirection());
+            telemetry.addData("motorBackRight: ", h.motorBackRight.getDirection());
+            /*telemetry.addData("servoWrist: ", h.servoWrist.getPosition());
             telemetry.addData("motorFrontLeft: ", h.motorFrontLeft.getCurrentPosition());
             telemetry.addData("motorFrontRight: ", h.motorFrontRight.getCurrentPosition());
             telemetry.addData("motorBackLeft: ", h.motorBackLeft.getCurrentPosition());
-            telemetry.addData("motorBackRight: ", h.motorBackRight.getCurrentPosition());
+            telemetry.addData("motorBackRight: ", h.motorBackRight.getCurrentPosition());*/
             telemetry.addData("wristPos: ", wristPos);
             telemetry.addData("servo toggle last iteration: ", pressedLastIterationIntake);
             telemetry.addData("servo toggle: ", pressedIntake);
             telemetry.addData("Motor reversed: ", "test");
             telemetry.update();
+            h.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            h.motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            h.motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             slow = gamepad1.a;
             /**Start drive system**/
             h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, slow, 2);

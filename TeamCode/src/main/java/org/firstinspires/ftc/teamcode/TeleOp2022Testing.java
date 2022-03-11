@@ -12,14 +12,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TeleOp2022Testing extends LinearOpMode
 {
     OpMode opmode;
-    enum ArmState {
+    public enum ArmState {
         ARM_START,
         ARM_EXTEND,
         ARM_DUMP,
         ARM_RETRACT
     };
 
-    ArmState armState;
+    ArmState armState = ArmState.ARM_START;
     @Override
     public void runOpMode() {
         Hardware h = new Hardware();
@@ -31,6 +31,10 @@ public class TeleOp2022Testing extends LinearOpMode
             telemetry.addData("Init Error:", "Something failed to initialize");
             e.printStackTrace();
         }
+        h.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode                = BNO055IMU.SensorMode.IMU;

@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.checkerframework.common.subtyping.qual.Bottom;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -47,6 +48,10 @@ public class FreightOpenCVRedCarousel extends LinearOpMode {
             telemetry.addData("Init Error:", "Something failed to initialize");
             e.printStackTrace();
         }
+        h.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -106,10 +111,10 @@ public class FreightOpenCVRedCarousel extends LinearOpMode {
         h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        h.motorFrontLeft.setTargetPosition(440);
-        h.motorFrontRight.setTargetPosition(440);
-        h.motorBackLeft.setTargetPosition(440);
-        h.motorBackRight.setTargetPosition(440);
+        h.motorFrontLeft.setTargetPosition(330);
+        h.motorFrontRight.setTargetPosition(330);
+        h.motorBackLeft.setTargetPosition(330);
+        h.motorBackRight.setTargetPosition(330);
 
         h.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         h.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -127,16 +132,16 @@ public class FreightOpenCVRedCarousel extends LinearOpMode {
         h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        h.motorFrontLeft.setTargetPosition(-2100);
-        h.motorFrontRight.setTargetPosition(2100);
-        h.motorBackLeft.setTargetPosition(2100);
-        h.motorBackRight.setTargetPosition(-2100);
+        h.motorFrontLeft.setTargetPosition(-2250);
+        h.motorFrontRight.setTargetPosition(2250);
+        h.motorBackLeft.setTargetPosition(2250);
+        h.motorBackRight.setTargetPosition(-2250);
 
         h.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         h.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         h.motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         h.motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        h.setDrivePower((float) 0.2);
+        h.setDrivePower((float) 0.4);
 
         h.sleep(3000);
 
@@ -244,7 +249,7 @@ public class FreightOpenCVRedCarousel extends LinearOpMode {
 
                 h.servoIntake.setPosition(0);
 
-                h.sleep(300);
+                h.sleep(1000);
 
                 h.motorWinch.setTargetPosition(0);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
