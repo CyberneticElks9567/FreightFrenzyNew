@@ -439,82 +439,6 @@ public class Hardware extends LinearOpMode
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        distanceEncodeVal = (int) Math.round((distanceInches * COUNTS_PER_INCH));
-
-        if(distanceInches > 0)
-        {
-            motorFrontLeft.setTargetPosition(distanceEncodeVal);
-            motorFrontRight.setTargetPosition(distanceEncodeVal);
-            motorBackLeft.setTargetPosition(distanceEncodeVal);
-            motorBackRight.setTargetPosition(distanceEncodeVal);
-        }
-        else
-        {
-            motorFrontLeft.setTargetPosition(-distanceEncodeVal);
-            motorFrontRight.setTargetPosition(-distanceEncodeVal);
-            motorBackLeft.setTargetPosition(-distanceEncodeVal);
-            motorBackRight.setTargetPosition(-distanceEncodeVal);
-        }
-
-        motorFrontLeft.setPower(power);
-        motorFrontRight.setPower(power);
-        motorBackLeft.setPower(power);
-        motorBackRight.setPower(power);
-
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        /*
-        while((motorFrontLeft.getCurrentPosition() > distanceEncodeVal) && opModeIsActive())
-        {
-            telemetry.addData("Running", "...");
-            telemetry.update();
-        }
-        */
-
-        //telemetry.addData("Running", "...");
-        //telemetry.update();
-
-        if(distanceInches > 0)
-        {
-
-            while (motorFrontRight.getCurrentPosition() < distanceEncodeVal - 20 && !isStopRequested())
-            {
-
-            }
-        }
-        else
-        {
-
-            while (motorFrontRight.getCurrentPosition() > -distanceEncodeVal + 20 && !isStopRequested())
-            {
-
-            }
-
-        }
-
-        //telemetry.addData("Finished", ".");
-        //telemetry.update();
-
-
-
-        /*motorFrontLeft.setTargetPosition(0);
-        motorFrontRight.setTargetPosition(0);
-        motorBackLeft.setTargetPosition(0);
-        motorBackRight.setTargetPosition(0);*/
-
-        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        motorFrontLeft.setPower(0);
-        motorFrontRight.setPower(0);
-        motorBackLeft.setPower(0);
-        motorBackRight.setPower(0);
-
 
     }
 
@@ -720,25 +644,25 @@ public class Hardware extends LinearOpMode
      *
      * @param joystickX x value of the joystick, this is used for strafing
      * @param joystickY y value of the joystick this is used for forward/backwards movement
-     * @param rotation x value of other joystick, used for turning
+     * @param rotation x value of right joystick, used for turning
      */
-    public void driveOmniDir(double joystickX, double joystickY, double rotation, boolean slow, double slowFactor)
+    public void driveOmniDir(double joystickX, double joystickY, double rotation)
      {
          /**                   | Forward and|
           *                    | Backwards  | Strafing | Turning |  */
-         if(!slow){
-             motorFrontRight.setPower(-joystickY - joystickX - rotation);
-             motorBackRight.setPower(-joystickY + joystickX - rotation);
-             motorFrontLeft.setPower(-joystickY + joystickX + rotation);
-             motorBackLeft.setPower(-joystickY - joystickX + rotation);
-         }
-         else
+
+         motorFrontRight.setPower(-joystickY - joystickX - rotation);
+         motorBackRight.setPower(-joystickY + joystickX - rotation);
+         motorFrontLeft.setPower(-joystickY + joystickX + rotation);
+         motorBackLeft.setPower(-joystickY - joystickX + rotation);
+
+         /*else
          {
              motorFrontRight.setPower((-joystickY - joystickX - rotation) / slowFactor);
              motorBackRight.setPower((-joystickY + joystickX - rotation) / slowFactor);
              motorFrontLeft.setPower((-joystickY + joystickX + rotation) / slowFactor);
              motorBackLeft.setPower((-joystickY - joystickX + rotation) / slowFactor);
-         }
+         }*/
 
 
          /**motorFrontRight.setPower(--1 - joystickX - rotation);

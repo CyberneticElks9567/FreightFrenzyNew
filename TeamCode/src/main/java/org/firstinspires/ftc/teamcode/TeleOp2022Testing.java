@@ -64,7 +64,7 @@ public class TeleOp2022Testing extends LinearOpMode
         telemetry.update();
 
         boolean pressedLastIterationIntake = false;
-        int      armLevel = 3;
+        int armLevel = 3;
         boolean bButton = false, aButtonPressed = false, bButtonPressed = false;
 
         ElapsedTime armTimer = new ElapsedTime();
@@ -85,7 +85,7 @@ public class TeleOp2022Testing extends LinearOpMode
             telemetry.update();
             boolean slow = false;
             //h.driveFieldRelative(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x);
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, slow, 2);
+            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             if(gamepad1.dpad_left || gamepad2.dpad_left)
             {
                 h.motorFrontLeft.setPower(-.2);

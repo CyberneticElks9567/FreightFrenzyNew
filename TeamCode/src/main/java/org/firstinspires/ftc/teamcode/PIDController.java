@@ -2,21 +2,28 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 public class PIDController {
     double Kp;
     double Ki;
     double Kd;
 
-    double derivative;
-    double error;
     double integralSum = 0;
     double lastError = 0;
-    double out;
+    boolean angleWrap = false;
+
+    ElapsedTime timer = new ElapsedTime();
 
     public PIDController(double Kp, double Ki, double Kd) {
         this.Kp = Kp;
         this.Ki = Ki;
         this.Kd = Kd;
+    }
+    public PIDController(double Kp, double Ki, double Kd, boolean angleWrap) {
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
+        this.angleWrap = angleWrap;
     }
 
     /**
@@ -25,23 +32,39 @@ public class PIDController {
      * @param state where we currently are, I.E. motor position
      * @return the command to our motor, I.E. motor power
      */
-    public double update(double target, double state) {
-        error = target - state;
+    public double output(double target, double state) {
+        double error;
+        double derivative;
 
-        ElapsedTime timer = new ElapsedTime();
-
-        error = target - state;
+        if (angleWrap)
+        {
+            error = angleWrap(target - state);
+        } else {
+            error = target - state;
+        }
 
         derivative = (error - lastError) / timer.seconds();
+        integralSum += error * timer.seconds();
 
-        integralSum = integralSum + (error + timer.seconds());
+        double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
 
-        out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-
-        lastError = error;
         timer.reset();
+        lastError = error;
 
         return out;
 
+    }
+
+    public double angleWrap(double radians)
+    {
+        while (radians > Math.PI)
+        {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI)
+        {
+            radians += 2 * Math.PI;
+        }
+        return radians;
     }
 }

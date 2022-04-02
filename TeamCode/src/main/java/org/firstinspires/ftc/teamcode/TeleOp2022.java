@@ -71,7 +71,7 @@ public class TeleOp2022 extends LinearOpMode
             h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             slow = gamepad1.a;
             /**Start drive system**/
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, slow, 2);
+            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             /** These are what I call "Fine Tuning Controls" (FTC) which are used for slow accurate movements
              *  for actions such as placing the shipping element these would probably be the first thing I remove

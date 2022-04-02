@@ -187,7 +187,7 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
 
         h.sleep(2500);
 
-        h.drivePureEncoder(true,1600,.2);
+        h.drivePureEncoder(true,1630,.2);
 
         switch (position)
         {
@@ -265,7 +265,7 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
 
                 h.servoIntake.setPosition(0);
 
-                h.sleep(300);
+                h.sleep(1000);
 
                 h.motorWinch.setTargetPosition(0);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);

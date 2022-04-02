@@ -114,7 +114,7 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
         h.setDrivePower((float) 0.2);
         h.sleep(5000);
 
-        h.drivePureEncoder(true,800,.3);
+        h.drivePureEncoder(true,900,.3);
         switch (position)
         {
             case MIDDLE:
@@ -172,7 +172,7 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
 
                 h.servoIntake.setPosition(0);
 
-                h.sleep(300);
+                h.sleep(1000);
 
                 h.motorWinch.setTargetPosition(0);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -203,7 +203,7 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
 
                 h.servoIntake.setPosition(0);
 
-                h.sleep(300);
+                h.sleep(1000);
 
                 h.motorWinch.setTargetPosition(0);
                 h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
