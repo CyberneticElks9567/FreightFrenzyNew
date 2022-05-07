@@ -703,11 +703,10 @@ public class Hardware extends LinearOpMode
     }
     public void driveFieldRelative(double joystickX, double joystickY, double turn)
     {
+        driveTurn = -turn;
 
-        driveTurn = -gamepad1.left_stick_x;
-
-        gamepadXCoordinate = gamepad1.right_stick_x; //this simply gives our x value relative to the driver
-        gamepadYCoordinate = -gamepad1.right_stick_y; //this simply gives our y vaue relative to the driver
+        gamepadXCoordinate = joystickX; //this simply gives our x value relative to the driver
+        gamepadYCoordinate = -joystickY; //this simply gives our y vaue relative to the driver
         gamepadHypot = Range.clip(Math.hypot(gamepadXCoordinate, gamepadYCoordinate), 0, 1);
         //finds just how much power to give the robot based on how much x and y given by gamepad
         //range.clip helps us keep our power within positive 1
@@ -720,7 +719,7 @@ public class Hardware extends LinearOpMode
         //adjust the angle we need to move at by finding needed movement degree based on gamepad and robot angles
         gamepadXControl = Math.cos(Math.toRadians(movementDegree)) * gamepadHypot;
         //by finding the adjacent side, we can get our needed x value to power our motors
-        double gamepadYControl = Math.sin(Math.toRadians(movementDegree)) * gamepadHypot;
+        gamepadYControl = Math.sin(Math.toRadians(movementDegree)) * gamepadHypot;
         //by finding the opposite side, we can get our needed y value to power our motors
 
         /**
@@ -734,7 +733,9 @@ public class Hardware extends LinearOpMode
         motorBackRight.setPower(gamepadYControl * Math.abs(gamepadYControl) + gamepadXControl * Math.abs(gamepadXControl) + driveTurn);
         motorFrontLeft.setPower(gamepadYControl * Math.abs(gamepadYControl) + gamepadXControl * Math.abs(gamepadXControl) - driveTurn);
         motorBackLeft.setPower(gamepadYControl * Math.abs(gamepadYControl) - gamepadXControl * Math.abs(gamepadXControl) - driveTurn);
+
     }
+
 
 
     /**

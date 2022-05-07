@@ -13,6 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous(name="ZTesting Auto", group="Auto")
 public class ZTesting_Auto extends LinearOpMode {
     Hardware h = new Hardware();
+    //PIDController pid = new PIDController();
     OpenCvCamera webCam;
     @Override
 
@@ -51,7 +52,6 @@ public class ZTesting_Auto extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        //h.driveStraight(.7,999999999);
         h.motorFrontLeft.setPower(1);
 
     }
