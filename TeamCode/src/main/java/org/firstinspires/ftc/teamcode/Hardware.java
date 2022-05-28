@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
@@ -87,6 +89,14 @@ public class Hardware extends LinearOpMode
     double movementDegree;
     double gamepadXControl;
     double gamepadYControl;
+
+    /**
+     * The variables and Equation used to turn the current wheels' encoders into inches
+     */
+    final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: Gobuilda 13.7:1 Ratio, 435 RPM
+    final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    final double     WHEEL_DIAMETER_INCHES   = 3.77 ;     // For figuring circumference
+    final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
 
     private Telemetry telemetry;
@@ -235,7 +245,6 @@ public class Hardware extends LinearOpMode
     public void drive(boolean forward, int distanceInches, double power)
     {
 
-
         int distanceEncodeVal;
 
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -243,7 +252,8 @@ public class Hardware extends LinearOpMode
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        distanceEncodeVal = (int) Math.round((distanceInches/(4* Math.PI))*1120);
+        //distanceEncodeVal = (int) Math.round((distanceInches/(4* Math.PI))*1120);
+        distanceEncodeVal = (int) Math.round((distanceInches*(COUNTS_PER_INCH)));
         driveTime = (distanceInches/10)*1000;
 
 

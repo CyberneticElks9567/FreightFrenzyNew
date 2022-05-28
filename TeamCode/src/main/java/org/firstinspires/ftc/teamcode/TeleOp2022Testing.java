@@ -18,7 +18,6 @@ public class TeleOp2022Testing extends LinearOpMode
         ARM_DUMP,
         ARM_RETRACT
     };
-
     ArmState armState = ArmState.ARM_START;
     @Override
     public void runOpMode() {
@@ -66,7 +65,7 @@ public class TeleOp2022Testing extends LinearOpMode
         boolean pressedLastIterationIntake = false;
         int armLevel = 3;
         boolean bButton = false, aButtonPressed = false, bButtonPressed = false;
-
+        h.servoIntake.setPosition(1);
         ElapsedTime armTimer = new ElapsedTime();
         waitForStart();
         while (opModeIsActive())
@@ -82,6 +81,7 @@ public class TeleOp2022Testing extends LinearOpMode
             telemetry.addData("motorBackLeft encoder value: ",h.motorBackLeft.getCurrentPosition());
             telemetry.addData("motorBackRight encoder value: ",h.motorBackRight.getCurrentPosition());
             telemetry.addData("Degrees: ", h.getIntegratedHeading());
+            telemetry.addData("State: ", armState);
             telemetry.update();
             boolean slow = false;
             h.driveFieldRelative(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -200,16 +200,22 @@ public class TeleOp2022Testing extends LinearOpMode
             {
                 case ARM_START:
                 // Waiting for some input
-                    if (gamepad1.x) {
+                    telemetry.addData("In: ", "ARM_START");
+                    if (gamepad1.x)
+                    {
                         // x is pressed, start extending
                         h.motorWinch.setTargetPosition(400);
+                        h.motorWinch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        h.motorWinch.setPower(1);
                         armState = armState.ARM_EXTEND;
                     }
                 break;
                 case ARM_EXTEND:
                     // check if the left has finished extending,
                     // otherwise do nothing.
-                    if (Math.abs(h.motorWinch.getCurrentPosition() - 400) < 10) {
+                    telemetry.addData("In: ", "ARM_EXTEND");
+                    if (Math.abs(h.motorWinch.getCurrentPosition() - 400) < 10)
+                    {
                         // our threshold is within
                         // 10 encoder ticks of our target.
                         // this is pretty arbitrary, and would have to be
@@ -223,20 +229,23 @@ public class TeleOp2022Testing extends LinearOpMode
                     }
                     break;
                 case ARM_DUMP:
-                    if (armTimer.seconds() >= .5) {
-                        // The robot waited long enough, time to start
+                    if (armTimer.seconds() >= .5)
+                    {
+                        // The robot waited long enough to drop the material, time to start
                         // retracting the lift
                         h.motorWinch.setTargetPosition(0);
+
                         armState = armState.ARM_RETRACT;
                     }
                     break;
                 case ARM_RETRACT:
-                    if (Math.abs(h.motorArm.getCurrentPosition() - 0) < 10) {
+                    if (Math.abs(h.motorArm.getCurrentPosition() - 0) < 10)
+                    {
                         armState = armState.ARM_START;
                     }
                     break;
                 default:
-                    // should never be reached, as liftState should never be null
+                    // should never be reached, as armState should never be null
                     armState = armState.ARM_START;
             }
 
@@ -311,10 +320,10 @@ public class TeleOp2022Testing extends LinearOpMode
             {
                 h.motorWinch.setPower(-.5);
             }
-            if(!gamepad1.left_bumper && gamepad1.left_trigger == 0)
+            /* if(!gamepad1.left_bumper && gamepad1.left_trigger == 0)
             {
                 h.motorWinch.setPower(0);
-            }
+            } */
            /* if(gamepad1.y)
             {
                 h.motorLaunch.setPower(gamepad1.left_trigger);

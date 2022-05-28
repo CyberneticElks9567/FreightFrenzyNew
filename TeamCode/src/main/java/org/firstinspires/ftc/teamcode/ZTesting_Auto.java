@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -39,6 +40,7 @@ public class ZTesting_Auto extends LinearOpMode {
         h.imu.initialize(parameters);
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
+        int distanceEncodeVal = 385;
 
         // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !h.imu.isGyroCalibrated())
@@ -50,9 +52,23 @@ public class ZTesting_Auto extends LinearOpMode {
         telemetry.addData("Mode", "waiting for start");
         telemetry.addData("imu calib status", h.imu.getCalibrationStatus().toString());
         telemetry.update();
-
+        h.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        h.motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         waitForStart();
-        h.motorFrontLeft.setPower(1);
+
+       /* h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+*/
+        h.motorFrontLeft.setTargetPosition(distanceEncodeVal);
+        h.motorFrontRight.setTargetPosition(distanceEncodeVal);
+        h.motorBackLeft.setTargetPosition(distanceEncodeVal);
+        h.motorBackRight.setTargetPosition(distanceEncodeVal);
+        h.setDrivePower((float).5);
+        //h.drive(true, 12, .5);
 
     }
 }
