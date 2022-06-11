@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+//TODO Add limts to other parts of robot, possibly to main TeleOp
 @TeleOp(name = "Demo TeleOp - FOR PRESENTATION", group = "TeleOp")
 /**
  * Programmer:    Sean Pakros & Kairon Johnson
@@ -33,39 +34,50 @@ public class DemoMode extends LinearOpMode
         telemetry.update();
 
         boolean pressedLastIterationIntake = false;
+        boolean pressedLastIterationFast = false;
+        boolean fastToggle = false;
         boolean pressedLastIterationWrist = false;
         boolean pressedLastIterationCarouselReverse = false;
-        boolean slow = false;
         double armSpeedUp = -1;
         double armSpeedDown = .8;
         boolean limitSwitch = true;
-        double wristPos =.5;
+        double wristPos = .5;
         boolean dpadDown = false, dpadUpPressed = false, dpadDownPressed = false;
+        double winchPow = .5;
 
         waitForStart();
         while (opModeIsActive()) {
             boolean changed = false;
             boolean pressedIntake = gamepad1.x;
+            boolean fast = gamepad2.right_stick_button;
             telemetry.addData("motorWinch Position: ", h.motorWinch.getCurrentPosition() + " busy =" + h.motorWinch.isBusy());
+            telemetry.addData("motorWinch Power", winchPow);
             telemetry.addData("motorArm Position: ", h.motorArm.getCurrentPosition() + " busy =" + h.motorArm.isBusy());
+            telemetry.addData("motorArm Power: ", h.motorArm.getPower());
             telemetry.addData("servoIntake: ", h.servoIntake.getPosition());
-            telemetry.addData("servoWrist: ", h.servoWrist.getPosition());
-            telemetry.addData("motorFrontLeft: ", h.motorFrontLeft.getDirection());
-            telemetry.addData("motorFrontRight: ", h.motorFrontRight.getDirection());
-            telemetry.addData("motorBackLeft: ", h.motorBackLeft.getDirection());
-            telemetry.addData("motorBackRight: ", h.motorBackRight.getDirection());
-            telemetry.addData("wristPos: ", wristPos);
-            telemetry.addData("servo toggle last iteration: ", pressedLastIterationIntake);
-            telemetry.addData("servo toggle: ", pressedIntake);
-            telemetry.addData("Motor reversed: ", "test");
+            telemetry.addData("fast boolean", fast);
+            telemetry.addData("fastToggle boolean", fastToggle);
             telemetry.update();
             h.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
             h.motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
             h.motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            slow = gamepad1.a;
+
+            if(fast && !pressedLastIterationFast)
+            {
+                fastToggle = !fastToggle;
+            }
+
             /**Start drive system**/
-            h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            if (fastToggle) {
+                h.driveOmniDir(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            } else {
+                h.driveOmniDir(gamepad1.left_stick_x/2, gamepad1.left_stick_y/2, gamepad1.right_stick_x/2);
+            }
+
+            if(gamepad2.back) {
+                requestOpModeStop();
+            }
 
             /** These are what I call "Fine Tuning Controls" (FTC) which are used for slow accurate movements
              *  for actions such as placing the shipping element these would probably be the first thing I remove
@@ -109,6 +121,7 @@ public class DemoMode extends LinearOpMode
              *  If you press y it will open fully we rarely open it fully as it adds risk that we may grab two blocks
              **/
             //0 is opened-.57 is partial open, 1 is closed
+
             if(pressedIntake & !pressedLastIterationIntake)
             {
                 if(h.servoIntake.getPosition() > .8)
@@ -123,7 +136,7 @@ public class DemoMode extends LinearOpMode
             }
             if (gamepad1.y)
             {
-                h.servoIntake.setPosition(0);
+                h.servoIntake.setPosition(.45);
             }
 
             /** END CLAW CONTROL**/
@@ -150,6 +163,7 @@ public class DemoMode extends LinearOpMode
             /** Our arm controls, this rotates the arm so we can reach the different levels. If 'a' on gamepad1 is held while moving the arm
              * it will move at half speed for more precision. This is helpful for precision placing such as the team shipping element**/
 
+
             if(gamepad1.right_trigger > .01 && h.motorArm.getCurrentPosition() < 1470)
             {
                 h.motorArm.setPower(armSpeedDown);
@@ -159,38 +173,40 @@ public class DemoMode extends LinearOpMode
                 h.motorArm.setPower(armSpeedUp);
             }
 
-            if(!gamepad1.right_bumper && gamepad1.right_trigger == 0)
+            if((!gamepad1.right_bumper && gamepad1.right_trigger == 0) || (h.motorArm.getCurrentPosition() > 1470 || h.motorArm.getCurrentPosition() < -200))
             {
                 h.motorArm.setPower(0);
             }
 
-
-            if(slow)
-            {
-                armSpeedDown = .4;
-                armSpeedUp = -.5;
-            }
-            else
+            if(fastToggle)
             {
                 armSpeedDown = .8;
                 armSpeedUp = -1;
             }
+            else
+            {
+                armSpeedDown = .5;
+                armSpeedUp = -.7;
+            }
+            //TODO update winch limits
 
-            if(gamepad1.left_trigger > .01 && h.motorWinch.getCurrentPosition() < 450)
+            if(gamepad1.left_trigger > .01 && h.motorWinch.getCurrentPosition() < 380)
             {
-                h.motorWinch.setPower(.5);
+                h.motorWinch.setPower(winchPow);
             }
-            if (gamepad1.left_bumper && h.motorWinch.getCurrentPosition() >= -10)
+            if (gamepad1.left_bumper && h.motorWinch.getCurrentPosition() >= 10)
             {
-                h.motorWinch.setPower(-.5);
+                h.motorWinch.setPower(-winchPow);
             }
-            if(!gamepad1.left_bumper && gamepad1.left_trigger == 0)
+            if((!gamepad1.left_bumper && gamepad1.left_trigger == 0) || (h.motorWinch.getCurrentPosition() > 380 || h.motorWinch.getCurrentPosition() <= 10))
             {
                 h.motorWinch.setPower(0);
             }
 
             h.servoWrist.setPosition(wristPos);
             pressedLastIterationIntake = pressedIntake;
+            pressedLastIterationFast = fast;
+
         }
     }
 }
