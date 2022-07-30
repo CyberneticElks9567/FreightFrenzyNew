@@ -124,7 +124,6 @@ public class FreightOpenCVBlueCarousel extends LinearOpMode {
 
         h.setDrivePower((float) 0.2);
 
-
         h.sleep(2000);
 
         h.turnIMU(90,.5,.3);

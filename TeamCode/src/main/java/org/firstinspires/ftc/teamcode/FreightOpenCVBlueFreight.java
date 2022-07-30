@@ -17,12 +17,14 @@ public class FreightOpenCVBlueFreight extends LinearOpMode {
     OpenCvCamera webCam;
     int ShippingElementPosFromLeft;
 
+    /** Setup enum for position to be used in a switch later on*/
     public enum Position {
         TOP,
         MIDDLE,
         BOTTOM
     }
     Position position;
+
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());

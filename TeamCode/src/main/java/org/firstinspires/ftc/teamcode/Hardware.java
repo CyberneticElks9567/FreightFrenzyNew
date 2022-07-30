@@ -32,7 +32,9 @@ public class Hardware extends LinearOpMode
      * Programmer:    Aiden Smith (Sean Pakros after Aiden has left the team)
      * Date Created:  Sometime in 2017?
      * Purpose:       Contains all our hardware and functions, basically everything we need to run.
-     */
+     **/
+
+    /** Setup hardware variables **/
     public DcMotor motorFrontRight;//In use
     public DcMotor motorBackRight;//In use
     public DcMotor motorBackLeft;//In use
@@ -711,6 +713,7 @@ public class Hardware extends LinearOpMode
          motorFrontLeft.setPower(-joystickY + joystickX - rotation);
          motorBackLeft.setPower(-joystickY - joystickX - rotation);*/
     }
+
     public void driveFieldRelative(double joystickX, double joystickY, double turn)
     {
         driveTurn = -turn;
@@ -745,7 +748,6 @@ public class Hardware extends LinearOpMode
         motorBackLeft.setPower(gamepadYControl * Math.abs(gamepadYControl) - gamepadXControl * Math.abs(gamepadXControl) - driveTurn);
 
     }
-
 
 
     /**
@@ -789,9 +791,9 @@ public class Hardware extends LinearOpMode
 
 
 
-//Right is all positive
-//Left is all negative
-//Straight is left positive. Right negative.
+        //Right is all positive
+        //Left is all negative
+        //Straight is left positive. Right negative.
         if(targetDegrees == 0)
         {
             //Tell robot to correct to straight forward
@@ -1144,7 +1146,7 @@ public class Hardware extends LinearOpMode
     /**
      * Sets all drive motors to a certain power. Used to save a few lines in autonomous mainly
      *
-     * @param motorPower power to set all motor s to [-1,1]
+     * @param motorPower power to set all motors to [-1,1]
      */
     public void setDrivePower(float motorPower)
     {
@@ -1152,33 +1154,6 @@ public class Hardware extends LinearOpMode
         motorBackLeft.setPower(motorPower);
         motorFrontRight.setPower(motorPower);
         motorBackRight.setPower(motorPower);
-    }
-
-    /**
-     * Some code I was trying to set all motors to a certain power for debugging. Just realized that setDrivePower does basically the same thing.
-     */
-    public void motorTest()
-    {
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        motorFrontLeft.setPower(0.5);
-        motorBackLeft.setPower(0.5);
-        motorFrontRight.setPower(0.5);
-        motorBackRight.setPower(0.5);
-    }
-
-    /**
-     * Takes in a motor as input and runs it at full power. For debug mainly and just was testing taking motors as an input. Not very useful.
-     * @param inputMotor motor to be set at 1 power
-     */
-    public void motorTester(DcMotor inputMotor)
-    {
-        inputMotor.setPower(1);
-        inputMotor.getPower();
-
     }
 
     public void driveStraight(double power, double time)
