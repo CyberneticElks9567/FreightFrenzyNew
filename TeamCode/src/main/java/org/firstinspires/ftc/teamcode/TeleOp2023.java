@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "2023 TeleOp -CHOOSE THIS ONE-", group = "TeleOp")
+@TeleOp(name = "2023 TeleOp", group = "TeleOp")
 /**
  * Programmer:
  * Date Created:  7/30/2022
- * Purpose: This is going to be our main teleop for PowerPlay, but for now is just to test on the new base.
+ * Purpose: This is going to be our main teleop for PowerPlay, but for now is just to test on the new base when it is finished.
  */
 public class TeleOp2023 extends LinearOpMode
 {

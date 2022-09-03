@@ -82,6 +82,7 @@ public class Hardware extends LinearOpMode
 
     int driveTime;
 
+    //software elements mainly for field relative
     double driveTurn;
     double gamepadXCoordinate;
     double gamepadYCoordinate;
@@ -96,10 +97,10 @@ public class Hardware extends LinearOpMode
      * The variables and Equation used to turn the current wheels' encoders into inches
      */
     final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: Gobuilda 13.7:1 Ratio, 435 RPM
-    final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    final double     WHEEL_DIAMETER_INCHES   = 3.77 ;     // For figuring circumference
+    final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP (2 rotations at input = 1 at output)
+    final double     WHEEL_DIAMETER_INCHES   = 96 / 25.4;     // For figuring circumference (96mm / 25.4 = ~3.78)
     final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
-
+    //                                                             764                       /     11.8378
 
     private Telemetry telemetry;
 
@@ -236,8 +237,7 @@ public class Hardware extends LinearOpMode
     /**
      * Drives the robot forward/backwards a set number of inches at a set power.
      *
-     * <p>Issues: Inch value isn't correct due to changing the tire,
-     * going to fix this post season so I don't have to rewrite auto</p>
+     * <p>Issues: Recently fixed the inch being innacurate now it is about three inches over every time, need to look into this some.</p>
      *
      *
      * @param forward sets direction the robot will drive in
@@ -443,7 +443,7 @@ public class Hardware extends LinearOpMode
         int distanceEncodeVal;
         final double     COUNTS_PER_MOTOR_REV    = 384.5 ;    // eg: Gobuilda 13.7:1 Ratio, 435 RPM
         final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-        final double     WHEEL_DIAMETER_INCHES   = 3.69 ;     // For figuring circumference
+        final double     WHEEL_DIAMETER_INCHES   = 96 / 25.4;     // For figuring circumference (3.69) (96mm / 25.4 = ~3.69)
         final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -476,7 +476,7 @@ public class Hardware extends LinearOpMode
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        distanceEncodeVal = -(int) Math.round((distanceInches/(4* Math.PI))*1120);
+        distanceEncodeVal = (int) Math.round((distanceInches*(COUNTS_PER_INCH)));
         driveTime = (distanceInches/10)*1000;
 
 
@@ -563,20 +563,13 @@ public class Hardware extends LinearOpMode
      * @param left direction the robot will drive
      * @param distanceEncodeVal distance in inches the robot will drive [0,∞?]
      * @param power power it will drive at [-1,1]
-     * @param driveTimeInSeconds Amount of time the strafe will be allowed to go in seconds.
      */
-    public void strafePureEncoder(boolean left, int distanceEncodeVal,double power, int driveTimeInSeconds)
+    public void strafePureEncoder(boolean left, int distanceEncodeVal,double power)
     {
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        driveTime = driveTimeInSeconds * 1000;
-        long beginning = System.currentTimeMillis();
-        long end = beginning + driveTime;
-
-
 
 
         if(left)
@@ -614,7 +607,7 @@ public class Hardware extends LinearOpMode
         if(left)
         {
 
-            while (motorFrontRight.getCurrentPosition() < -distanceEncodeVal + 20 && !isStopRequested() && System.currentTimeMillis() != end)
+            while (motorFrontRight.getCurrentPosition() < -distanceEncodeVal + 20 && !isStopRequested())
             {
 
             }
@@ -1185,5 +1178,10 @@ public class Hardware extends LinearOpMode
 
 
 
+    }
+    public int calculateTicks(double inches)
+    {
+        int encoderTicks = (int) Math.round(COUNTS_PER_INCH * inches);
+        return encoderTicks;
     }
 }

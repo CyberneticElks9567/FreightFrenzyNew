@@ -58,16 +58,12 @@ public class ZTesting_Auto extends LinearOpMode {
         h.motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         waitForStart();
 
-       /* h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*h.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         h.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         h.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         h.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 */
-        h.motorFrontLeft.setTargetPosition(distanceEncodeVal);
-        h.motorFrontRight.setTargetPosition(distanceEncodeVal);
-        h.motorBackLeft.setTargetPosition(distanceEncodeVal);
-        h.motorBackRight.setTargetPosition(distanceEncodeVal);
-        h.setDrivePower((float).5);
+        h.strafePureEncoder(true, h.calculateTicks(20), .7);
         //h.drive(true, 12, .5);
 
     }
